@@ -1,0 +1,29 @@
+# Dependencies
+**/node_modules
+
+# Build and test artifacts
+**/dist
+**/coverage
+**/*.tsbuildinfo
+
+# Environment variables and secrets
+**/.env
+**/.env.*
+
+# Git files
+.git
+.github
+.gitignore
+.gitattributes
+
+# Logs
+**/*.log
+
+# Operating system and editor files
+**/.DS_Store
+.vscode
+.idea
+
+# Documentation
+README.md
+LICENSE
