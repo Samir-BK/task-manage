@@ -105,7 +105,7 @@ jobs:
         run: |
           docker buildx build \
             --platform linux/amd64,linux/arm64 \
-            --build-arg VITE_API_URL=http://localhost:5001/api \
+            --build-arg VITE_API_URL="${{ vars.PRODUCTION_API_URL }}" \
             --tag ghcr.io/samir-bk/task-manage-frontend:latest \
             --tag ghcr.io/samir-bk/task-manage-frontend:${{ github.sha }} \
             --label org.opencontainers.image.source=https://github.com/Samir-BK/task-manage \
