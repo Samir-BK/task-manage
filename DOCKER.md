@@ -147,3 +147,78 @@ for local testing through `DB_SYNC=true`.
 Production deployment requires appropriate secret
 management, HTTPS, database access controls, migration
 management and deployment-specific configuration.
+
+## Continuous Integration and Image Publishing
+
+GitHub Actions automates application validation,
+Docker image packaging and registry publishing.
+
+The workflow consists of three sequential jobs:
+
+1. `ci`: Installs dependencies, audits dependencies,
+   builds applications, runs tests and performs lint checks.
+2. `docker`: Builds both production Docker images after
+   successful CI validation.
+3. `publish`: Builds and publishes multi-platform images
+   to GitHub Container Registry after successful packaging.
+
+Publishing is restricted to pushes to the main branch.
+Pull requests run validation and packaging without
+publishing images.
+
+Registry authentication uses the automatically generated
+GITHUB_TOKEN with job-level package write permissions.
+
+## Published Docker Images
+
+Both application images are publicly available through
+GitHub Container Registry (GHCR).
+
+- [Backend package](https://github.com/Samir-BK/task-manage/pkgs/container/task-manage-backend)
+- [Frontend package](https://github.com/Samir-BK/task-manage/pkgs/container/task-manage-frontend)
+
+Both images support:
+
+- Linux AMD64 (`linux/amd64`)
+- Linux ARM64 (`linux/arm64`)
+
+Images are published with a `latest` tag and a Git commit
+SHA tag for source revision traceability.
+
+## Pull Published Images
+
+Download the backend image:
+
+```bash
+docker pull ghcr.io/samir-bk/task-manage-backend:latest
+```
+
+Download the frontend image:
+
+```bash
+docker pull ghcr.io/samir-bk/task-manage-frontend:latest
+```
+
+Docker automatically selects the compatible architecture.
+
+The published frontend image is configured with the local
+backend API URL: http://localhost:5001/api.
+
+The backend requires runtime environment variables and
+a PostgreSQL database connection.
+
+Pulling the images alone does not start the application.
+
+## CI and Registry Verification
+
+The following checks were completed successfully:
+
+- Automated backend and frontend image builds.
+- Automated GHCR authentication and publishing.
+- Public package visibility verification.
+- AMD64 and ARM64 platform verification.
+- Successful retrieval of both published images.
+
+Successful workflow execution:
+
+https://github.com/Samir-BK/task-manage/actions/runs/45808843224
