@@ -19,3 +19,38 @@ describe('API Health Check', () => {
     expect(response.body).toHaveProperty('success', false);
   });
 });
+
+describe('API Rate Limiting', () => {
+  it('should limit excessive authentication requests', async () => {
+    for (let i = 0; i < 20; i++) {
+      const response = await request(app).get('/api/auth/me');
+
+      expect(response.status).toBe(401);
+    }
+
+    const response = await request(app).get('/api/auth/me');
+
+    expect(response.status).toBe(429);
+    expect(response.body).toHaveProperty('success', false);
+    expect(response.body).toHaveProperty(
+      'message',
+      'Too many authentication requests. Please try again later.'
+    );
+  });
+  it('should limit excessive task requests', async () => {
+    for (let i = 0; i < 100; i++) {
+      const response = await request(app).get('/api/tasks');
+
+      expect(response.status).toBe(401);
+    }
+
+    const response = await request(app).get('/api/tasks');
+
+    expect(response.status).toBe(429);
+    expect(response.body).toHaveProperty('success', false);
+    expect(response.body).toHaveProperty(
+      'message',
+      'Too many task requests. Please try again later.'
+    );
+  });
+});
