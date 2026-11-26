@@ -47,5 +47,19 @@ jobs:
 
             - name: Lint frontend
               run: npm run lint:frontend
+    docker:
+        needs: ci
+        runs-on: ubuntu-latest
 
+        steps:
+            - name: Check out source code
+              uses: actions/checkout@v7
+
+            - name: Set up Docker Buildx
+              uses: docker/setup-buildx-action@v4
             
+            - name: Build backend Docker image
+              run: docker buildx build --load -t task-manage-backend:ci -f backend/Dockerfile .
+
+            - name: Build frontend Docker image
+              run: docker buildx build --load --build-arg VITE_API_URL=http://localhost:5001/api -t task-manage-frontend:ci -f frontend/Dockerfile .
